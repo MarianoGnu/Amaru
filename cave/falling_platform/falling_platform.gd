@@ -13,16 +13,15 @@ func _ready():
 	
 
 func _fixed_process(delta):
-	if (platform.test_motion(Vector2(0,-1), 0.08, test_motion_info)):
+	if (platform.is_inside_tree() && platform.test_motion(Vector2(0,-1), 0.08, test_motion_info)):
 		if "player" in test_motion_info.get_collider().get_groups():
 			var player = test_motion_info.get_collider()
-			if player.speed_y < -1:
-				return
-			set_fixed_process(false)
-			var anim = platform.get_node("anim")
-			anim.play("shake")
-			yield(anim,"finished")
-			platform.set_mode(RigidBody2D.MODE_CHARACTER)
+			if player.is_colliding() && player.get_collider() == platform:
+				set_fixed_process(false)
+				var anim = platform.get_node("anim")
+				anim.play("shake")
+				yield(anim,"finished")
+				platform.set_mode(RigidBody2D.MODE_CHARACTER)
 
 func dispose():
 	if platform.is_inside_tree():

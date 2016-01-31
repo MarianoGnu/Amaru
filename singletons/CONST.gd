@@ -4,7 +4,7 @@ extends Node
 const none = 0
 
 #region player
-const walk_speed = 100
+const walk_speed = 120
 const run_speed = 200
 const acceleration = 300
 const gravity = 300

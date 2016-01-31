@@ -8,7 +8,9 @@ func _ready():
 	if (climb_area != null):
 		climb_area.connect("body_enter", self, "on_body_enter")
 		climb_area.connect("body_exit", self, "on_body_exit")
-	var walkable = get_node("walkable")
+	var walkable
+	if has_node("walkable"):
+		walkable = get_node("walkable")
 	if (walkable != null):
 		walkable.add_to_group("one_way_collision")
 
