@@ -10,6 +10,8 @@ var crouched = false
 var speed_y = CONST.gravity
 var speed_x = 0
 
+var allow_enter_cave = false
+
 var jump = 0
 var max_jump = 2
 
@@ -99,6 +101,14 @@ func _fixed_process(delta):
 			speed_x = 0
 			climbing = true
 			anim.play("climb")
+		elif Input.is_action_pressed("up") && self.grounded && allow_enter_cave:
+			speed_x = 0
+			set_fixed_process(false)
+			get_node("CollisionPolygon2D").set_trigger(true)
+			anim.play("enter")
+			yield(anim, "finished")
+			set_fixed_process(true)
+			get_node("CollisionPolygon2D").set_trigger(false)
 		elif Input.is_action_pressed("down") && self.grounded:
 			speed_x = 0
 			crouched = true
@@ -195,3 +205,35 @@ func jump_down():
 
 func normalize_rot():
 	sprite_node.set_rot(0)
+
+func exit_cave():
+	speed_x = 0
+	set_fixed_process(false)
+	get_node("CollisionPolygon2D").set_trigger(true)
+	anim.play("exit")
+	yield(anim, "finished")
+	set_fixed_process(true)
+	get_node("CollisionPolygon2D").set_trigger(false)
+
+
+func locate_in_cave():
+	set_global_pos((Globals.get("cave_pos").get_global_pos()))
+	var cam = get_node("Camera2D")
+	var top_left = Globals.get("cave_top_left").get_global_pos()
+	var bottom_right = Globals.get("cave_bottom_right").get_global_pos()
+	cam.set_limit(MARGIN_TOP,top_left.y)
+	cam.set_limit(MARGIN_LEFT,top_left.x)
+	cam.set_limit(MARGIN_BOTTOM,bottom_right.y)
+	cam.set_limit(MARGIN_RIGHT,bottom_right.x)
+	
+
+
+func locate_in_cave_entrance():
+	set_global_pos(Globals.get("cave_entrance_pos").get_global_pos())
+	var cam = get_node("Camera2D")
+	var top_left = Globals.get("world_top_left").get_global_pos()
+	var bottom_right = Globals.get("world_bottom_right").get_global_pos()
+	cam.set_limit(MARGIN_TOP,top_left.y)
+	cam.set_limit(MARGIN_LEFT,top_left.x)
+	cam.set_limit(MARGIN_BOTTOM,bottom_right.y)
+	cam.set_limit(MARGIN_RIGHT,bottom_right.x)
