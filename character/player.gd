@@ -51,7 +51,6 @@ func _fixed_process(delta):
 		if crouched:
 			call_deferred("jump_down")
 		else:
-			print ("jump: " + str(jump))
 			if jump == 0:
 				anim.play("pre_jump")
 				set_fixed_process(false)
